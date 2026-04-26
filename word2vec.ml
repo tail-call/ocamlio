@@ -38,6 +38,36 @@ let test1 () = test_dict#print_contents
 
 let test2 () = test_dict#tokenize (words_of "what a beautiful day and a cat")
 
+let neighbor_indices_of ~i ~window ~last_index =
+  let ceiling = last_index - 1 in
+  let start = max 0 (i - window) in
+  let stop = min ceiling (i + window) in
+  let rec loop acc current =
+    if current < start then
+      acc
+    else if current == i then
+      loop acc (current - 1)
+    else
+      loop (current :: acc) (current - 1)
+  in
+  if start > stop then [] else loop [] stop
+
+let generate_pairs items window =
+  List.flatten (
+    List.mapi (fun i x ->
+      let ranges = neighbor_indices_of
+        ~i
+        ~window:2
+        ~last_index:(List.length items)
+      in
+      List.map (fun j -> (List.nth items j, x)) ranges
+    ) items
+  )
+
+let test3 () =
+  let data = test2 () in
+    generate_pairs data 2
+
 ;;
 
-test2 ()
+test3()
