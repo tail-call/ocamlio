@@ -1,0 +1,1 @@
+Here I try my hand at OCaml, specifically: implementing word2vec algorithm.
